@@ -1,12 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the source code from the repository
-                git 'https://github.com/your-repository/hello-world.git'
-            }
-        }
         stage('Build') {
             steps {
                 // Use Maven to build the application
