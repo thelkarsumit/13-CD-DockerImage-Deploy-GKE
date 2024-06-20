@@ -7,13 +7,16 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                // Perform SonarQube analysis
-                withSonarQubeEnv('SonarQube-server') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
+        stage('sonarqube-analysis') {
+           steps {
+               // Perform SonarQube analysis
+               withSonarQubeEnv('sonar-server') {
+                   sh 'mvn clean verify sonar:sonar \
+                       -Dsonar.projectKey=03-Docker-Container \
+                       -Dsonar.host.url=http://35.228.202.17:9000 \
+                       -Dsonar.login=sqp_e99f09f4ef01a6da391d903b0a9dd127ffa058aa'
+               }
+             }
         }
         stage('Docker Build') {
             steps {
