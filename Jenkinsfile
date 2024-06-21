@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('sonarqube-analysis') {
             steps {
-                withSonarQubeEnv('sonar-server') {
+                withSonarQubeEnv('SonarQube-server') {
                  sh 'mvn clean verify sonar:sonar \
                     -Dsonar.projectKey=04-Docker-Container-ChatGPT-code \
                     -Dsonar.host.url=http://35.228.202.17:9000 \
