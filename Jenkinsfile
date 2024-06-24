@@ -30,10 +30,7 @@ pipeline {
             steps {
                 // Define steps for the Test stage
                 echo 'Running tests...'
-                sh  'gcloud version
-                     gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
-                     gcloud compute zones list
-                     mvn test'
+                sh  'mvn test'
             }
         }
      
