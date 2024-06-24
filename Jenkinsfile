@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         SCANNER_HOME=tool 'SonarQube-Scanner'
-        CLOUDSDK_CORE_PROJECT='peak-axiom-426310-b1'
+        PROJECT_ID='peak-axiom-426310-b1'
         CLIENT_EMAIL='jenkins-vm-controller@peak-axiom-426310-b1.iam.gserviceaccount.com'
         GCLOUD_CREDS=credentials('GCP-service-key')
         IMAGE_NAME = 'hello-world'
