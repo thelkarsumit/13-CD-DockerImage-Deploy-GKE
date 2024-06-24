@@ -1,34 +1,69 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven'
-    }
+    
     environment {
         SCANNER_HOME=tool 'SonarQube-Scanner'
+        CLOUDSDK_CORE_PROJECT='peak-axiom-426310-b1'
+        CLIENT_EMAIL='jenkins-vm-controller@peak-axiom-426310-b1.iam.gserviceaccount.com'
+        GCLOUD_CREDS=credentials('GCP-service-key')
+        IMAGE_NAME = 'hello-world'
+        DOCKER_IMAGE = ''
+      }
+    
+  tools {
+        maven 'Maven'
     }
-    stages {
+    
+ stages {
         stage('sonarqube-analysis') {
             steps {
                 withSonarQubeEnv('SonarQube-server') {
                  sh 'mvn clean verify sonar:sonar \
-                    -Dsonar.projectKey=04-Docker-Container-ChatGPT-code \
-                    -Dsonar.host.url=http://35.228.202.17:9000 \
-                    -Dsonar.login=sqp_6f7cae4d3dfdbabc18b99eb7a23570e8bb993019'
+                      -Dsonar.projectKey=HelloWorld-DockerImage-Push-GCP \
+                      -Dsonar.host.url=http://35.228.47.4:9000 \
+                      -Dsonar.login=sqp_0cbc01c8a34a6a1e5b3a7c3d66feee59c71b756d'
                 }
             }
         }
-        stage('Build') {
+        
+     stage('Test') {
+            steps {
+                // Define steps for the Test stage
+                echo 'Running tests...'
+                sh '
+                    gcloud version
+                    gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
+                    gcloud compute zones list
+                    mvn test'
+            }
+        }
+     
+    stage('Build') {
             steps {
                 // Define steps for the Build stage
                 echo 'Building the project...'
                 sh 'mvn clean package'
             }
         }
-        stage('Test') {
+     
+    stage('Docker Build') {
             steps {
-                // Define steps for the Test stage
-                echo 'Running tests...'
-                sh 'mvn test'
+                script {
+                    // Build the Docker image
+                    DOCKER_IMAGE = "gcr.io/${env.PROJECT_ID}/${env.IMAGE_NAME}:latest"
+                    docker.build(DOCKER_IMAGE)
+                }
+            }
+        }
+     
+    stage('Docker Push') {
+            steps {
+                script {
+                        sh 'gcloud auth activate-service-account --key-file=${GCLOUD_CREDS}'
+                        sh 'gcloud auth configure-docker --quiet'
+                        docker.image(DOCKER_IMAGE).push()
+                    
+                }
             }
         }
     }
