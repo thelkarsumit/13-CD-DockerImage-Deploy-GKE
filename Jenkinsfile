@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    DOCKER_IMAGE = "docker build -t ${env.PROJECT_ID}/${env.IMAGE_NAME}:latest"
+                    DOCKER_IMAGE = "docker build -t ${env.PROJECT_ID}/${env.IMAGE_NAME}:latest ."
                     docker.build(DOCKER_IMAGE)
                 }
             }
