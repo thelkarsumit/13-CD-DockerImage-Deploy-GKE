@@ -46,8 +46,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    DOCKER_IMAGE = "gcr.io/${PROJECT_ID}/${IMAGE_NAME}:latest"
-                    docker.build(DOCKER_IMAGE)
+                    sh 'docker build -t us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloWorld .'
                 }
             }
         }
@@ -57,7 +56,7 @@ pipeline {
                 script {
                         sh 'gcloud auth configure-docker \
                             us-central1-docker.pkg.dev'
-                        sh 'docker push us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/${DOCKER_IMAGE}'
+                        sh 'docker push us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloWorld'
                 }
             }
         }
