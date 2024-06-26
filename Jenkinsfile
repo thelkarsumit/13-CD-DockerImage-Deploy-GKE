@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    DOCKER_IMAGE = "gcr.io/${env.PROJECT_ID}/${env.IMAGE_NAME}:latest"
+                    DOCKER_IMAGE = "gcr.io/${PROJECT_ID}/${IMAGE_NAME}:latest"
                     docker.build(DOCKER_IMAGE)
                 }
             }
