@@ -55,7 +55,8 @@ pipeline {
     stage('Docker Push') {
             steps {
                 script {
-                        sh 'gcloud auth activate-service-account --key-file=${GCLOUD_CREDS}'
+                        sh 'gcloud auth configure-docker \ 
+                             us-central1-docker.pkg.dev'
                         sh 'docker push us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/${DOCKER_IMAGE}'
                 }
             }
