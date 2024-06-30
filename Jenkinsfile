@@ -10,39 +10,27 @@ pipeline {
         DOCKER_IMAGE = ''
       }
     
-  tools {
+tools {
         maven 'Maven'
-    }
+    } 
     
- stages {
-        stage('sonarqube-analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube-server') {
-                 sh 'mvn clean verify sonar:sonar \
-                      -Dsonar.projectKey=06-HelloWorld-DockerImage-Push-GCP \
-                      -Dsonar.host.url=http://34.88.208.170:9000 \
-                      -Dsonar.login=sqp_c13007b8bae2a0c234171e2b18175f794e35d2be'
-                }
-            }
-        }
-        
-     stage('Test') {
+stage('Test') {
             steps {
                 // Define steps for the Test stage
                 echo 'Running tests...'
                 sh  'mvn test'
             }
         }
-     
-    stage('Build') {
+    
+stage('Build') {
             steps {
                 // Define steps for the Build stage
                 echo 'Building the project...'
                 sh 'mvn clean package'
             }
         }
-     
-    stage('Docker Build') {
+    
+stage('Docker Build') {
             steps {
                 script {
                     // Build the Docker image
@@ -51,8 +39,16 @@ pipeline {
                 }
             }
         }
-     
-    stage('Docker Push') {
+    
+stage('Scan Docker Image') {
+            steps {
+                script {
+                    sh "trivy image us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld"
+                }
+            }
+        }
+    
+stage('Docker Push') {
             steps {
                 script {
                         sh 'gcloud auth configure-docker \
@@ -61,23 +57,5 @@ pipeline {
                 }
             }
         }
-    }
-    post {
-        success {
-            // Actions to take if the pipeline succeeds
-            echo 'Pipeline succeeded!'
-            // You can also send an email notification on success
-            mail to: 'thelkarsc@gmail.com',
-                 subject: "Pipeline Succeeded: ${currentBuild.fullDisplayName}",
-                 body: "The pipeline ${env.BUILD_URL} has successfully completed."
-        }
-        failure {
-            // Actions to take if the pipeline fails
-            echo 'Pipeline failed!'
-            // You can also send an email notification on failure
-            mail to: 'thelkarsc@gmail.com',
-                 subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
-                 body: "The pipeline ${env.BUILD_URL} has failed. Check the logs for details."
-        }
-    }
+    
 }
