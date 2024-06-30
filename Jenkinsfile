@@ -13,7 +13,7 @@ pipeline {
 tools {
         maven 'Maven'
     } 
-    
+stages {    
 stage('Test') {
             steps {
                 // Define steps for the Test stage
@@ -57,5 +57,5 @@ stage('Docker Push') {
                 }
             }
         }
-    
+}  
 }
