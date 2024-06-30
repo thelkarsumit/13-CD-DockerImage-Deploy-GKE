@@ -65,7 +65,7 @@ stage('Docker Push') {
                             gcloud config set project $PROJECT_ID
                             gcloud config set compute/zone $CLUSTER_ZONE
                             gcloud container clusters get-credentials $CLUSTER_NAME
-                            kubectl set image deployment/{us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1}
+                            kubectl set image deployment/(us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1)
                             kubectl apply -f deployment.yaml
                         '''
                 }
