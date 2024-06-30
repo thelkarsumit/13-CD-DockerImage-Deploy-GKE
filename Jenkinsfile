@@ -60,7 +60,6 @@ stage('Docker Push') {
     stage('Deploy to GKE') {
             steps {
                 script {
-                     {
                         sh '''
                             gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" 
                             gcloud config set project $PROJECT_ID
@@ -69,7 +68,6 @@ stage('Docker Push') {
                             kubectl set image deployment/hello-world us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1
                             kubectl apply -f deployment.yaml
                         '''
-                    }
                 }
             }
         }
@@ -78,8 +76,5 @@ stage('Docker Push') {
             always {
                  cleanWs()
             }
-        }
-    }
-
-    }  
+        }  
 }
