@@ -6,8 +6,8 @@ pipeline {
         PROJECT_ID='peak-axiom-426310-b1'
         CLIENT_EMAIL='jenkins-vm-controller@peak-axiom-426310-b1.iam.gserviceaccount.com'
         GCLOUD_CREDS=credentials('GCP-service-key')
-        IMAGE_NAME = 'hello-world'
-        DOCKER_IMAGE = ''
+        CLUSTER_NAME = 'autopilot-cluster-1'
+        CLUSTER_ZONE = 'us-east1'
       }
     
 tools {
@@ -57,5 +57,29 @@ stage('Docker Push') {
                 }
             }
         }
-}  
+    stage('Deploy to GKE') {
+            steps {
+                script {
+                     {
+                        sh '''
+                            gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" 
+                            gcloud config set project $PROJECT_ID
+                            gcloud config set compute/zone $CLUSTER_ZONE
+                            gcloud container clusters get-credentials $CLUSTER_NAME
+                            kubectl set image deployment/hello-world us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1
+                            kubectl apply -f deployment.yaml
+                        '''
+                    }
+                }
+            }
+        }
+    }
+      post {
+            always {
+                 cleanWs()
+            }
+        }
+    }
+
+    }  
 }
