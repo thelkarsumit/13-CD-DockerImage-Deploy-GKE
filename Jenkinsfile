@@ -35,7 +35,7 @@ stage('Docker Build') {
                 script {
                     // Build the Docker image
                     sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" '
-                    sh 'docker build -t us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld .'
+                    sh 'docker build -t us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1 .'
                 }
             }
         }
@@ -43,7 +43,7 @@ stage('Docker Build') {
 stage('Scan Docker Image') {
             steps {
                 script {
-                    sh "trivy image us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld"
+                    sh "trivy image us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1"
                 }
             }
         }
@@ -53,7 +53,7 @@ stage('Docker Push') {
                 script {
                         sh 'gcloud auth configure-docker \
                             us-central1-docker.pkg.dev'
-                        sh 'docker push us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld'
+                        sh 'docker push us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1'
                 }
             }
         }
