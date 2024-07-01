@@ -7,7 +7,7 @@ pipeline {
         CLIENT_EMAIL='jenkins-vm-controller@peak-axiom-426310-b1.iam.gserviceaccount.com'
         GCLOUD_CREDS=credentials('GCP-service-key')
         CLUSTER_NAME = 'autopilot-cluster-1'
-        CLUSTER_ZONE = 'us-east1'
+        CLUSTER_ZONE = 'us-central1'
       }
     
 tools {
