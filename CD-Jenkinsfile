@@ -9,17 +9,12 @@ pipeline {
         CLUSTER_ZONE = 'us-central1'
       }
 stages{
-
-    stage('Validate Image Existence') {
+  stage('Validate Image Existence') {
         steps {
                 script {
-                    // Define your image details
                     def image = 'us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1'
- 
-                    // Use 'gcloud' to list tags for the image (without --region)
                     def result = sh(returnStdout: true, script: "gcloud container images list-tags ${image}")
  
-                    // Check if the command returned any output (meaning the image exists)
                     if (result.trim() != "") {
                         echo "Image ${image} exists in GCR!"
                     } else {
@@ -29,17 +24,13 @@ stages{
             }
        } 
      stage('Login to GCP') {
-          sh '''
-            gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" 
-            gcloud config set project $PROJECT_ID
-            '''
+          sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" 
+              gcloud config set project $PROJECT_ID'
        }
     stage('Cluster Login') {
-        sh '''
-            gcloud container clusters get-credentials autopilot-cluster-1 --region us-west1 --project peak-axiom-426310-b1
+        sh 'gcloud container clusters get-credentials autopilot-cluster-1 --region us-west1 --project peak-axiom-426310-b1
             gcloud config set compute/zone $CLUSTER_ZONE
-            gcloud container clusters get-credentials $CLUSTER_NAME
-          '''
+            gcloud container clusters get-credentials $CLUSTER_NAME'
        }
    stage('Create Namespace') {
     sh 'kubectl create namespace my-namespace'
@@ -48,9 +39,7 @@ stages{
     stage('Deploy to GKE') {
             steps {
                 script {
-                        sh '''
-                            kubectl apply -f deployment.yaml
-                        '''
+                        sh 'kubectl apply -f deployment.yaml'
                 }
             }
         }
