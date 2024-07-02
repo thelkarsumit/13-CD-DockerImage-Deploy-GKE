@@ -8,7 +8,9 @@ pipeline {
         CLUSTER_NAME = 'autopilot-cluster-1'
         CLUSTER_ZONE = 'us-central1'
       }
-stage('Validate Image Existence') {
+stages{
+
+    stage('Validate Image Existence') {
         steps {
                 script {
                     // Define your image details
@@ -25,15 +27,14 @@ stage('Validate Image Existence') {
                     }
                 }
             }
-       }
-stages {  
+       } 
      stage('Login to GCP') {
           sh '''
             gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" 
             gcloud config set project $PROJECT_ID
             '''
        }
-   stage('Cluster Login') {
+    stage('Cluster Login') {
         sh '''
             gcloud container clusters get-credentials autopilot-cluster-1 --region us-west1 --project peak-axiom-426310-b1
             gcloud config set compute/zone $CLUSTER_ZONE
@@ -53,7 +54,7 @@ stages {
                 }
             }
         }
-    }
+}
      post {
             always {
                  cleanWs()
