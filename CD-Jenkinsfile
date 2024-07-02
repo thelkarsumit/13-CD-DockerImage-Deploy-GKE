@@ -24,17 +24,29 @@ stages{
             }
        } 
      stage('Login to GCP') {
-          sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" ' 
-          sh  'gcloud config set project $PROJECT_ID'
+         steps {
+        script {
+                sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" ' 
+                 sh  'gcloud config set project $PROJECT_ID'
+            }
+        }
        }
     stage('Cluster Login') {
-        sh 'gcloud container clusters get-credentials autopilot-cluster-1 --region us-west1 --project peak-axiom-426310-b1 \
-            gcloud config set compute/zone $CLUSTER_ZONE \
-            gcloud container clusters get-credentials $CLUSTER_NAME'
+        steps {
+        script {
+            sh 'gcloud container clusters get-credentials autopilot-cluster-1 --region us-west1 --project peak-axiom-426310-b1 \
+                gcloud config set compute/zone $CLUSTER_ZONE \
+                gcloud container clusters get-credentials $CLUSTER_NAME'
+            }
+        }
        }
    stage('Create Namespace') {
-    sh 'kubectl create namespace my-namespace'
+         steps {
+                script {
+                sh 'kubectl create namespace my-namespace'
+            }
        }
+    }
 
     stage('Deploy to GKE') {
             steps {
