@@ -26,16 +26,16 @@ stages{
      stage('Login to GCP') {
          steps {
         script {
-                sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" ' 
-                 sh  'gcloud config set project $PROJECT_ID'
+                 sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" ' 
+                 sh 'gcloud config set project $PROJECT_ID'
+                 sh 'gcloud config set compute/zone $CLUSTER_ZONE'
             }
         }
        }
     stage('Cluster Login') {
         steps {
         script {
-            sh 'gcloud config set compute/zone $CLUSTER_ZONE \
-                gcloud container clusters get-credentials $CLUSTER_NAME'
+               sh'gcloud container clusters get-credentials $CLUSTER_NAME'
             }
         }
        }
