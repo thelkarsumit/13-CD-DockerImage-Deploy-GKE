@@ -24,8 +24,8 @@ stages{
             }
        } 
      stage('Login to GCP') {
-          sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" 
-              gcloud config set project $PROJECT_ID'
+          sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" ' 
+          sh  'gcloud config set project $PROJECT_ID'
        }
     stage('Cluster Login') {
         sh 'gcloud container clusters get-credentials autopilot-cluster-1 --region us-west1 --project peak-axiom-426310-b1
