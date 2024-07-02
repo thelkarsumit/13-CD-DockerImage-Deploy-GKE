@@ -6,7 +6,7 @@ pipeline {
         CLIENT_EMAIL='jenkins-vm-controller@peak-axiom-426310-b1.iam.gserviceaccount.com'
         GCLOUD_CREDS=credentials('GCP-service-key')
         CLUSTER_NAME = 'autopilot-cluster-1'
-        CLUSTER_ZONE = 'us-central1'
+        CLUSTER_ZONE = 'us-west1'
       }
 stages{
   stage('Validate Image Existence') {
@@ -34,8 +34,7 @@ stages{
     stage('Cluster Login') {
         steps {
         script {
-            sh 'gcloud container clusters get-credentials autopilot-cluster-1 --region us-west1 --project peak-axiom-426310-b1 \
-                gcloud config set compute/zone $CLUSTER_ZONE \
+            sh 'gcloud config set compute/zone $CLUSTER_ZONE \
                 gcloud container clusters get-credentials $CLUSTER_NAME'
             }
         }
