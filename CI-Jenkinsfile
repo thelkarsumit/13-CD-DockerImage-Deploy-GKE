@@ -45,7 +45,7 @@ stage('Trivy Scan Docker Image') {
                 }
             }
         }  
-stage('Docker Push') {
+stage('Dokcer Imgae Pushing To google artifact registry') {
             steps {
                 script {
                         sh 'gcloud auth configure-docker \
