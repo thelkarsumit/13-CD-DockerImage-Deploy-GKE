@@ -1,6 +1,8 @@
 pipeline {
     agent any
-    
+    parameters {
+        string(name: 'IMAGE_NAME') 
+    }  
     environment {
         PROJECT_ID='peak-axiom-426310-b1'
         CLIENT_EMAIL='jenkins-vm-controller@peak-axiom-426310-b1.iam.gserviceaccount.com'
@@ -9,45 +11,52 @@ pipeline {
         CLUSTER_ZONE = 'us-west1'
       }
 stages{
-  stage('Validate Image Existence') {
-        steps {
-                script {
-                    def image = 'us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1'
-                    def result = sh(returnStdout: true, script: "gcloud container images list-tags ${image}")
- 
-                    if (result.trim() != "") {
-                        echo "Image ${image} exists in GCR!"
-                    } else {
-                        error "Image ${image} does not exist in GCR."
-                    }
-                }
-            }
-       } 
-     stage('Login to GCP') {
+ stage('Login to GCP') {
          steps {
         script {
                  sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" ' 
                  sh 'gcloud config set project $PROJECT_ID'
                  sh 'gcloud config set compute/zone $CLUSTER_ZONE'
             }
-        }
-       }
-    stage('Cluster Login') {
+         }
+     }
+stage('Validate Image Existence') {
+        steps {
+                script {
+                    def result = sh(returnStdout: true, script: "gcloud container images list-tags ${IMAGE_NAME}")
+ 
+                    if (result.trim() != "") {
+                        echo "Image ${IMAGE_NAME} exists in GCR!"
+                    } else {
+                        error "Image ${IMAGE_NAME} does not exist in GCR."
+                    }
+                }
+            }
+       } 
+stage('Cluster Login') {
         steps {
         script {
                sh'gcloud container clusters get-credentials $CLUSTER_NAME'
             }
         }
-       }
-   stage('Create Namespace') {
+    }
+     /*
+    stage('Validate Namespace Existence') {
+        steps {
+                script {
+           
+                }
+            }
+        }
+    */
+stage('Create Namespace') {
          steps {
                 script {
                 sh 'kubectl create namespace my-namespace'
             }
        }
     }
-
-    stage('Deploy to GKE') {
+stage('Deploy to GKE') {
             steps {
                 script {
                         sh 'kubectl apply -f deployment.yaml'
@@ -56,8 +65,24 @@ stages{
         }
 }
      post {
-            always {
+          always {
                  cleanWs()
             }
-        }  
+        success {
+            // Actions to take if the pipeline succeeds
+            echo 'Pipeline succeeded!'
+            // You can also send an email notification on success
+            mail to: 'thelkarsc@gmail.com',
+                 subject: "Pipeline Succeeded: ${currentBuild.fullDisplayName}",
+                 body: "The pipeline ${env.BUILD_URL} has successfully completed."
+        }
+        failure {
+            // Actions to take if the pipeline fails
+            echo 'Pipeline failed!'
+            // You can also send an email notification on failure
+            mail to: 'thelkarsc@gmail.com',
+                 subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
+                 body: "The pipeline ${env.BUILD_URL} has failed. Check the logs for details."
+            }
+        }   
 }
