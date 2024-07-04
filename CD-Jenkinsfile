@@ -40,15 +40,9 @@ stage('Cluster Login') {
             }
         }
     }
-     /*
-    stage('Validate Namespace Existence') {
-        steps {
-                script {
-           
-                }
-            }
-        }
-    */
+     
+    //stage('Validate Namespace Existence') {
+ 
 stage('Create Namespace') {
          steps {
                 script {
