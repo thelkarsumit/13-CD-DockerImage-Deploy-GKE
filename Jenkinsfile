@@ -8,7 +8,7 @@ pipeline {
         CLIENT_EMAIL='jenkins-vm-controller@peak-axiom-426310-b1.iam.gserviceaccount.com'
         GCLOUD_CREDS=credentials('GCP-service-key')
         CLUSTER_NAME = 'autopilot-cluster-1'
-        CLUSTER_ZONE = 'us-west1'
+        CLUSTER_ZONE = 'us-central1'
       }
 stages{
  stage('Login to GCP') {
@@ -62,21 +62,5 @@ stage('Deploy to GKE') {
           always {
                  cleanWs()
             }
-        success {
-            // Actions to take if the pipeline succeeds
-            echo 'Pipeline succeeded!'
-            // You can also send an email notification on success
-            mail to: 'thelkarsc1@gmail.com',
-                 subject: "Pipeline Succeeded: ${currentBuild.fullDisplayName}",
-                 body: "The pipeline ${env.BUILD_URL} has successfully completed."
-        }
-        failure {
-            // Actions to take if the pipeline fails
-            echo 'Pipeline failed!'
-            // You can also send an email notification on failure
-            mail to: 'thelkarsc1@gmail.com',
-                 subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
-                 body: "The pipeline ${env.BUILD_URL} has failed. Check the logs for details."
-            }
-        }   
+     }
 }
