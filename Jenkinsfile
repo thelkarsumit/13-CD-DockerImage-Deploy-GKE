@@ -46,7 +46,7 @@ stage('Cluster Login') {
 stage('Create Namespace') {
          steps {
                 script {
-                sh 'kubectl create namespace my-namespace'
+                sh 'kubectl create namespace my-namespace1'
             }
        }
     }
