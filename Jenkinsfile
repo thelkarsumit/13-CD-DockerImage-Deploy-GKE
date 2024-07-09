@@ -9,7 +9,7 @@ pipeline {
         GCLOUD_CREDS=credentials('GCP-service-key')
         CLUSTER_NAME = 'autopilot-cluster-1'
         CLUSTER_ZONE = 'us-central1'
-        NAMESPACE = 'my-namespace'
+        NAMESPACE = '1my-namespace'
       }
 stages{
  stage('Authenticate to GCP') {
