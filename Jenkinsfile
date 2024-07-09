@@ -9,9 +9,10 @@ pipeline {
         GCLOUD_CREDS=credentials('GCP-service-key')
         CLUSTER_NAME = 'autopilot-cluster-1'
         CLUSTER_ZONE = 'us-central1'
+        NAMESPACE = 'my-namespace'
       }
 stages{
- stage('Login to GCP') {
+ stage('Authenticate to GCP') {
          steps {
         script {
                  sh 'gcloud auth activate-service-account --key-file="$GCLOUD_CREDS" ' 
@@ -20,7 +21,7 @@ stages{
             }
          }
      }
-stage('Validate Image Existence') {
+stage('Artifact image validation') {
         steps {
                 script {
                     def result = sh(returnStdout: true, script: "gcloud container images list-tags ${IMAGE_NAME}")
@@ -41,19 +42,23 @@ stage('Cluster Login') {
         }
     }
      
-    //stage('Validate Namespace Existence') {
- 
-stage('Create Namespace') {
-         steps {
+ stage('Namespace Creation') {
+            steps {
                 script {
-                sh 'kubectl create namespace my-namespace1'
+                    def namespaceExists = sh(script: "kubectl get namespace ${NAMESPACE} --ignore-not-found", returnStatus: true)
+                    if (namespaceExists == 0) {
+                        echo "Namespace '${NAMESPACE}' already exists."
+                    } else {
+                        sh(script: "kubectl create namespace ${NAMESPACE}", returnStatus: true)
+                        echo "Namespace '${NAMESPACE}' created."
+                    }
+                }
             }
-       }
-    }
+        }
 stage('Deploy to GKE') {
             steps {
                 script {
-                        sh 'kubectl apply -f deployment.yaml'
+                        sh 'kubectl apply -f deployment.yaml -f ingress.yaml -n ${NAMESPACE}'
                 }
             }
         }
