@@ -44,13 +44,14 @@ stage('Cluster Login') {
      
  stage('Namespace Creation') {
             steps {
-                script {
-                    def namespaceExists = sh(script: "kubectl get namespace ${NAMESPACE} --ignore-not-found", returnStatus: true)
-                    if (namespaceExists == 0) {
+                    script {
+                    def result = sh(returnStdout: true, script: "kubectl get namespace ${NAMESPACE}")
+ 
+                    if (result.trim() != "") {
                         echo "Namespace '${NAMESPACE}' already exists."
                     } else {
                         sh(script: "kubectl create namespace ${NAMESPACE}", returnStatus: true)
-                        echo "Namespace '${NAMESPACE}' created."
+                        error "Namespace '${NAMESPACE}' created."
                     }
                 }
             }
