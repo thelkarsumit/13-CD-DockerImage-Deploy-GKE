@@ -45,7 +45,7 @@ stage('Cluster Login') {
  stage('Namespace Creation') {
             steps {
                     script {
-                    def result = sh(returnStdout: true, script: "kubectl get namespace ${NAMESPACE}")
+                    def result = sh(script: "kubectl get namespace ${NAMESPACE} -o yaml", returnStatus: true) == 0
  
                     if (result.trim() != "") {
                         echo "Namespace '${NAMESPACE}' already exists."
