@@ -9,7 +9,7 @@ pipeline {
         GCLOUD_CREDS=credentials('GCP-service-key')
         CLUSTER_NAME = 'autopilot-cluster-1'
         CLUSTER_ZONE = 'us-central1'
-        NAMESPACE = '1my-namespace'
+        NAMESPACE = 'my-namespace'
       }
 stages{
  stage('Authenticate to GCP') {
@@ -51,7 +51,7 @@ stage('Cluster Login') {
                         echo "Namespace '${NAMESPACE}' already exists."
                     } else {
                         sh(script: "kubectl create namespace ${NAMESPACE}", returnStatus: true)
-                        error "Namespace '${NAMESPACE}' created."
+                        echo "Namespace '${NAMESPACE}' created."
                     }
                 }
             }
