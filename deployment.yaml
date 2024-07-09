@@ -13,7 +13,20 @@ spec:
         app: hello-world
     spec:
       containers:
-      - name: hello-world
+      - name: my-containers
         image: us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld2
         ports:
         - containerPort: 8080
+--- # Services
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: deployment-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-world
+  ports:
+    - port: 8080
+      targetPort: 8080
