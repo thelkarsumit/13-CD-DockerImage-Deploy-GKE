@@ -40,14 +40,12 @@ stage('Cluster Login') {
                sh'gcloud container clusters get-credentials $CLUSTER_NAME'
             }
         }
-    }
-     
- stage('Namespace Creation') {
+    }  
+    stage('Namespace Creation') {
             steps {
-                    script {
-                    def result = sh(script: "kubectl get namespace ${NAMESPACE} -o yaml", returnStatus: true) == 0
- 
-                    if (result.trim() != "") {
+                script {
+                    def exists = sh(script: "kubectl get namespace ${NAMESPACE} -o yaml", returnStatus: true) == 0
+                    if (exists) {
                         echo "Namespace '${NAMESPACE}' already exists."
                     } else {
                         sh(script: "kubectl create namespace ${NAMESPACE}", returnStatus: true)
