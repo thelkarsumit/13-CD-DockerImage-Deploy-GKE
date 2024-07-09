@@ -1,7 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+ name: my-namespace
+ ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-world
+  namespace: my-namespace
 spec:
   replicas: 3
   selector:
@@ -14,6 +20,6 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld1
+        image: us-central1-docker.pkg.dev/peak-axiom-426310-b1/docker-image-push-01/helloworld2
         ports:
         - containerPort: 8080
