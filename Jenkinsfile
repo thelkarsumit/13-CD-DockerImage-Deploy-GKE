@@ -7,8 +7,8 @@ pipeline {
         PROJECT_ID='peak-axiom-426310-b1'
         CLIENT_EMAIL='jenkins-vm-controller@peak-axiom-426310-b1.iam.gserviceaccount.com'
         GCLOUD_CREDS=credentials('GCP-service-key')
-        CLUSTER_NAME = 'cluster-1'
-        CLUSTER_ZONE = 'us-central1-c'
+        CLUSTER_NAME = 'cluster-2'
+        CLUSTER_ZONE = 'southamerica-east1-a'
         NAMESPACE = 'my-namespace'
       }
 stages{
